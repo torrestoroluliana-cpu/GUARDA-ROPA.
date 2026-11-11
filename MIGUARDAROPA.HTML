@@ -1,0 +1,659 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Armario Azul</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#eaf4ff;
+ color:#173b5c;
+}
+.app{
+ max-width:480px;
+ min-height:100vh;
+ margin:auto;
+ background:#f7fbff;
+ padding-bottom:85px;
+}
+header{
+ background:linear-gradient(135deg,#07549a,#48a6ed);
+ color:white;
+ padding:25px 20px;
+ border-radius:0 0 28px 28px;
+}
+.logo{
+ font-size:35px;
+}
+header h1{margin:5px 0;font-size:24px}
+header p{font-size:13px}
+main{padding:16px}
+.section{display:none}
+.section.active{display:block}
+h2{font-size:20px}
+.card{
+ background:white;
+ border-radius:16px;
+ padding:14px;
+ margin-bottom:14px;
+ box-shadow:0 3px 12px #9bbbd833;
+}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+}
+.stat{
+ background:white;
+ padding:14px 5px;
+ border-radius:14px;
+ text-align:center;
+}
+.stat b{
+ display:block;
+ font-size:23px;
+ color:#0876c9;
+}
+.stat span{font-size:11px}
+button{
+ border:none;
+ cursor:pointer;
+ border-radius:10px;
+ padding:10px 13px;
+}
+.primary{
+ background:#0876c9;
+ color:white;
+ font-weight:bold;
+}
+.secondary{
+ background:#dceeff;
+ color:#07549a;
+}
+.danger{
+ background:#ffe5e5;
+ color:#c62828;
+}
+.quick{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+.quick button{
+ background:#e1f1ff;
+ color:#07549a;
+ padding:18px 10px;
+ font-weight:bold;
+ font-size:13px;
+}
+input,select,textarea{
+ width:100%;
+ padding:12px;
+ margin:7px 0 12px;
+ border:1px solid #c8dff3;
+ border-radius:10px;
+ background:white;
+ outline-color:#0876c9;
+}
+label{font-size:13px;font-weight:bold}
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+.item{
+ background:white;
+ border-radius:14px;
+ overflow:hidden;
+ box-shadow:0 3px 10px #9bbbd833;
+}
+.item img{
+ width:100%;
+ height:140px;
+ object-fit:cover;
+ background:#e1f1ff;
+}
+.info{padding:10px}
+.info h3{font-size:14px;margin:3px 0}
+.info p{font-size:11px;color:#6c8297}
+.actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:5px;
+}
+.actions button{font-size:11px;padding:7px}
+nav{
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:100%;
+ max-width:480px;
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ background:white;
+ border-top:1px solid #d3e5f5;
+ padding:9px 2px;
+}
+nav button{
+ background:white;
+ color:#7089a1;
+ font-size:10px;
+ padding:5px 0;
+}
+nav button span{
+ display:block;
+ font-size:21px;
+ margin-bottom:4px;
+}
+nav button.active{
+ color:#0876c9;
+ font-weight:bold;
+}
+.preview{
+ width:100%;
+ max-height:180px;
+ object-fit:contain;
+ display:none;
+ margin:10px 0;
+}
+.outfit{
+ background:white;
+ padding:14px;
+ border-radius:14px;
+ margin-bottom:12px;
+}
+.outfit img{
+ width:75px;
+ height:80px;
+ object-fit:cover;
+ border-radius:9px;
+}
+.pieces{
+ display:flex;
+ gap:8px;
+ overflow-x:auto;
+ margin:10px 0;
+}
+.piece{text-align:center;min-width:80px}
+.piece p{font-size:10px}
+.chips{
+ display:flex;
+ gap:7px;
+ overflow-x:auto;
+ margin-bottom:12px;
+}
+.chips button{white-space:nowrap}
+.empty{
+ text-align:center;
+ padding:25px;
+ color:#7890a6;
+ font-size:13px;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">👗💙</div>
+ <h1>MI ARMARIO AZUL</h1>
+ <p>Tu estilo, organizado cada día</p>
+ <h2>¡Hola! Viste tu mejor versión</h2>
+ <p>Organiza tus prendas y crea combinaciones únicas.</p>
+</header>
+
+<main>
+
+<!-- INICIO -->
+<section id="inicio" class="section active">
+ <h2>Mi armario</h2>
+
+ <div class="stats">
+  <div class="stat">
+   <b id="total">0</b>
+   <span>Prendas</span>
+  </div>
+  <div class="stat">
+   <b id="favTotal">0</b>
+   <span>Favoritas</span>
+  </div>
+  <div class="stat">
+   <b id="outTotal">0</b>
+   <span>Outfits</span>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>✨ Accesos rápidos</h3>
+  <div class="quick">
+   <button onclick="mostrar('agregar')">➕<br>Agregar prenda</button>
+   <button onclick="mostrar('outfits')">👚<br>Crear outfit</button>
+   <button onclick="mostrar('catalogo')">🧥<br>Mi catálogo</button>
+   <button onclick="mostrar('favoritos')">💙<br>Favoritos</button>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>💡 Consejo de moda</h3>
+  <p>Combina tus prendas favoritas, prueba nuevos colores y descubre diferentes estilos para cada día.</p>
+ </div>
+</section>
+
+<!-- CATALOGO -->
+<section id="catalogo" class="section">
+ <h2>👗 Catálogo de prendas</h2>
+
+ <input id="buscar" placeholder="Buscar prendas..." oninput="dibujarCatalogo()">
+
+ <div class="chips" id="filtros"></div>
+
+ <div class="grid" id="catalogoLista"></div>
+</section>
+
+<!-- AGREGAR -->
+<section id="agregar" class="section">
+ <h2 id="tituloFormulario">➕ Nueva prenda</h2>
+
+ <div class="card">
+  <form id="formPrenda">
+
+   <input type="hidden" id="editId">
+
+   <label>Nombre de la prenda</label>
+   <input id="nombre" required placeholder="Ejemplo: Blusa blanca">
+
+   <label>Categoría</label>
+   <select id="categoria" required>
+    <option value="">Seleccionar categoría</option>
+    <option>Blusas</option>
+    <option>Pantalones</option>
+    <option>Vestidos</option>
+    <option>Faldas</option>
+    <option>Zapatos</option>
+    <option>Accesorios</option>
+    <option>Casacas y abrigos</option>
+    <option>Otros</option>
+   </select>
+
+   <label>Color</label>
+   <input id="color" placeholder="Ejemplo: Azul">
+
+   <label>Descripción</label>
+   <textarea id="descripcion" placeholder="Descripción de la prenda"></textarea>
+
+   <label>Fotografía</label>
+   <input type="file" id="foto" accept="image/*">
+
+   <img id="preview" class="preview" alt="Vista previa">
+
+   <button class="primary" type="submit" id="guardar">
+    Guardar prenda
+   </button>
+
+   <button type="button" class="secondary" onclick="limpiar()">
+    Limpiar
+   </button>
+
+  </form>
+ </div>
+</section>
+
+<!-- OUTFITS -->
+<section id="outfits" class="section">
+ <h2>✨ Crear combinaciones</h2>
+
+ <div class="card">
+  <form id="formOutfit">
+
+   <label>Nombre del outfit</label>
+   <input id="outNombre" required placeholder="Ejemplo: Look casual">
+
+   <label>Fecha</label>
+   <input type="date" id="fecha">
+
+   <label>Estilo</label>
+   <select id="estilo">
+    <option>Casual</option>
+    <option>Elegante</option>
+    <option>Deportivo</option>
+    <option>Formal</option>
+    <option>Fiesta</option>
+    <option>Trabajo</option>
+   </select>
+
+   <label>Selecciona tus prendas</label>
+   <div id="seleccion"></div>
+
+   <button class="primary" type="submit">
+    Guardar combinación
+   </button>
+
+  </form>
+ </div>
+
+ <h2>Mis outfits guardados</h2>
+ <div id="outfitLista"></div>
+</section>
+
+<!-- FAVORITOS -->
+<section id="favoritos" class="section">
+ <h2>💙 Mis prendas favoritas</h2>
+ <div class="grid" id="favoritosLista"></div>
+</section>
+
+</main>
+
+<nav>
+ <button class="active" onclick="mostrar('inicio',this)">
+  <span>🏠</span>Inicio
+ </button>
+ <button onclick="mostrar('catalogo',this)">
+  <span>👗</span>Catálogo
+ </button>
+ <button onclick="mostrar('agregar',this)">
+  <span>➕</span>Agregar
+ </button>
+ <button onclick="mostrar('outfits',this)">
+  <span>✨</span>Outfits
+ </button>
+ <button onclick="mostrar('favoritos',this)">
+  <span>💙</span>Favoritos
+ </button>
+</nav>
+
+</div>
+
+<script>
+// BASE DE DATOS LOCAL
+let prendas=JSON.parse(localStorage.getItem('prendasAzul')||'[]');
+let outfits=JSON.parse(localStorage.getItem('outfitsAzul')||'[]');
+let fotoActual='';
+let filtro='Todas';
+
+function guardarDatos(){
+ try{
+  localStorage.setItem('prendasAzul',JSON.stringify(prendas));
+  localStorage.setItem('outfitsAzul',JSON.stringify(outfits));
+ }catch(e){
+  alert('No hay suficiente espacio. Prueba con fotografías más pequeñas.');
+ }
+}
+
+function mostrar(id,boton){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ if(boton)boton.classList.add('active');
+
+ if(id==='inicio')actualizar();
+ if(id==='catalogo')dibujarCatalogo();
+ if(id==='favoritos')dibujarFavoritos();
+ if(id==='outfits'){
+  dibujarSeleccion();
+  dibujarOutfits();
+ }
+ window.scrollTo(0,0);
+}
+
+function actualizar(){
+ document.getElementById('total').textContent=prendas.length;
+ document.getElementById('favTotal').textContent=prendas.filter(p=>p.fav).length;
+ document.getElementById('outTotal').textContent=outfits.length;
+}
+
+const categorias=['Todas','Blusas','Pantalones','Vestidos','Faldas','Zapatos','Accesorios','Casacas y abrigos','Otros'];
+
+function dibujarFiltros(){
+ document.getElementById('filtros').innerHTML=categorias.map(c=>
+ `<button class="${filtro===c?'primary':'secondary'}" onclick="cambiarFiltro('${c}')">${c}</button>`
+ ).join('');
+}
+
+function cambiarFiltro(c){
+ filtro=c;
+ dibujarCatalogo();
+}
+
+function tarjeta(p){
+ return `
+ <div class="item">
+  <img src="${p.foto}" alt="${esc(p.nombre)}">
+  <div class="info">
+   <h3>${esc(p.nombre)}</h3>
+   <p>${esc(p.categoria)} · ${esc(p.color||'Sin color')}</p>
+   <div class="actions">
+    <button class="secondary" onclick="favorito('${p.id}')">${p.fav?'♥':'♡'}</button>
+    <button class="secondary" onclick="editar('${p.id}')">✏️</button>
+    <button class="danger" onclick="eliminar('${p.id}')">🗑</button>
+   </div>
+  </div>
+ </div>`;
+}
+
+function dibujarCatalogo(){
+ dibujarFiltros();
+ let q=document.getElementById('buscar').value.toLowerCase();
+
+ let lista=prendas.filter(p=>
+ (filtro==='Todas'||p.categoria===filtro)&&
+ (p.nombre+' '+p.color).toLowerCase().includes(q)
+ );
+
+ document.getElementById('catalogoLista').innerHTML=
+ lista.length?lista.map(tarjeta).join(''):
+ '<div class="empty" style="grid-column:1/-1">👗<br>No tienes prendas registradas.</div>';
+
+ actualizar();
+}
+
+function dibujarFavoritos(){
+ let lista=prendas.filter(p=>p.fav);
+ document.getElementById('favoritosLista').innerHTML=
+ lista.length?lista.map(tarjeta).join(''):
+ '<div class="empty" style="grid-column:1/-1">💙<br>Aún no tienes favoritos.</div>';
+}
+
+function favorito(id){
+ let p=prendas.find(x=>x.id===id);
+ if(!p)return;
+ p.fav=!p.fav;
+ guardarDatos();
+ dibujarCatalogo();
+ dibujarFavoritos();
+ actualizar();
+}
+
+function eliminar(id){
+ if(confirm('¿Deseas eliminar esta prenda?')){
+  prendas=prendas.filter(p=>p.id!==id);
+  outfits.forEach(o=>o.ids=o.ids.filter(x=>x!==id));
+  guardarDatos();
+  dibujarCatalogo();
+  dibujarFavoritos();
+  dibujarOutfits();
+  actualizar();
+ }
+}
+
+// FOTOGRAFÍAS
+document.getElementById('foto').addEventListener('change',function(e){
+ let archivo=e.target.files[0];
+ if(!archivo)return;
+ if(!archivo.type.startsWith('image/')){
+  alert('Selecciona una fotografía válida');
+  return;
+ }
+ let reader=new FileReader();
+ reader.onload=function(ev){
+  let img=new Image();
+  img.onload=function(){
+   let canvas=document.createElement('canvas');
+   let escala=Math.min(1,850/Math.max(img.width,img.height));
+   canvas.width=img.width*escala;
+   canvas.height=img.height*escala;
+   canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+   fotoActual=canvas.toDataURL('image/jpeg',0.78);
+   document.getElementById('preview').src=fotoActual;
+   document.getElementById('preview').style.display='block';
+  };
+  img.src=ev.target.result;
+ };
+ reader.readAsDataURL(archivo);
+});
+
+// REGISTRAR Y MODIFICAR
+document.getElementById('formPrenda').addEventListener('submit',function(e){
+ e.preventDefault();
+
+ let id=document.getElementById('editId').value;
+ let anterior=prendas.find(p=>p.id===id);
+
+ if(!fotoActual){
+  alert('Debes agregar una fotografía');
+  return;
+ }
+
+ let p={
+  id:id||String(Date.now()),
+  nombre:document.getElementById('nombre').value.trim(),
+  categoria:document.getElementById('categoria').value,
+  color:document.getElementById('color').value,
+  descripcion:document.getElementById('descripcion').value,
+  foto:fotoActual,
+  fav:anterior?anterior.fav:false
+ };
+
+ if(anterior){
+  prendas=prendas.map(x=>x.id===id?p:x);
+ }else{
+  prendas.unshift(p);
+ }
+
+ guardarDatos();
+ limpiar();
+ alert('¡Prenda guardada correctamente!');
+ dibujarCatalogo();
+ actualizar();
+ mostrar('catalogo');
+});
+
+function editar(id){
+ let p=prendas.find(x=>x.id===id);
+ if(!p)return;
+
+ document.getElementById('editId').value=p.id;
+ document.getElementById('nombre').value=p.nombre;
+ document.getElementById('categoria').value=p.categoria;
+ document.getElementById('color').value=p.color;
+ document.getElementById('descripcion').value=p.descripcion;
+
+ fotoActual=p.foto;
+ document.getElementById('preview').src=p.foto;
+ document.getElementById('preview').style.display='block';
+
+ document.getElementById('tituloFormulario').textContent='Modificar prenda';
+ document.getElementById('guardar').textContent='Guardar cambios';
+
+ mostrar('agregar');
+}
+
+function limpiar(){
+ document.getElementById('formPrenda').reset();
+ document.getElementById('editId').value='';
+ fotoActual='';
+ document.getElementById('preview').style.display='none';
+ document.getElementById('tituloFormulario').textContent='➕ Nueva prenda';
+ document.getElementById('guardar').textContent='Guardar prenda';
+}
+
+// CREAR OUTFITS
+function dibujarSeleccion(){
+ document.getElementById('seleccion').innerHTML=prendas.length?
+ prendas.map(p=>`
+ <label style="display:block;margin:9px 0">
+ <input type="checkbox" value="${p.id}" style="width:auto">
+ ${esc(p.nombre)} (${esc(p.categoria)})
+ </label>`).join(''):
+ '<p class="empty">Primero registra tus prendas.</p>';
+}
+
+document.getElementById('formOutfit').addEventListener('submit',function(e){
+ e.preventDefault();
+
+ let ids=[...document.querySelectorAll('#seleccion input:checked')].map(x=>x.value);
+
+ if(ids.length===0){
+  alert('Selecciona al menos una prenda');
+  return;
+ }
+
+ outfits.unshift({
+  id:String(Date.now()),
+  nombre:document.getElementById('outNombre').value,
+  fecha:document.getElementById('fecha').value,
+  estilo:document.getElementById('estilo').value,
+  ids:ids
+ });
+
+ guardarDatos();
+ this.reset();
+ dibujarOutfits();
+ actualizar();
+ alert('¡Tu combinación fue guardada!');
+});
+
+function dibujarOutfits(){
+ document.getElementById('outfitLista').innerHTML=outfits.length?
+ outfits.map(o=>{
+ let piezas=o.ids.map(id=>prendas.find(p=>p.id===id)).filter(Boolean);
+ return `
+ <div class="outfit">
+  <h3>✨ ${esc(o.nombre)}</h3>
+  <p>${esc(o.estilo)} · ${esc(o.fecha||'Sin fecha')}</p>
+  <div class="pieces">
+   ${piezas.map(p=>`
+    <div class="piece">
+     <img src="${p.foto}" alt="${esc(p.nombre)}">
+     <p>${esc(p.nombre)}</p>
+    </div>`).join('')}
+  </div>
+  <button class="danger" onclick="eliminarOutfit('${o.id}')">Eliminar outfit</button>
+ </div>`;
+ }).join(''):
+ '<div class="empty">✨<br>Aún no tienes outfits guardados.</div>';
+}
+
+function eliminarOutfit(id){
+ if(confirm('¿Eliminar esta combinación?')){
+  outfits=outfits.filter(o=>o.id!==id);
+  guardarDatos();
+  dibujarOutfits();
+  actualizar();
+ }
+}
+
+function esc(s){
+ return String(s||'').replace(/[&<>"']/g,c=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;',
+ '"':'&quot;',"'":'&#39;'
+ }[c]));
+}
+
+// INICIAR APLICACIÓN
+dibujarCatalogo();
+dibujarFavoritos();
+dibujarSeleccion();
+dibujarOutfits();
+actualizar();
+
+</script>
+</body>
+</html>
